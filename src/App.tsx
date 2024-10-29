@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Phone } from 'lucide-react';
 import NumberShuffler from './components/NumberShuffler';
 import CsvViewer from './components/CsvViewer';
 import ManualShuffle from './components/ManualShuffle';
@@ -14,18 +13,7 @@ function App() {
   const renderView = () => {
     switch (currentView) {
       case 'landing':
-        return (
-          <>
-            <header className="text-center mb-12">
-              <div className="flex items-center justify-center mb-4">
-                
-              <h1 className="text-4xl font-bold">Advanced Phone Number Tools</h1>
-              </div>
-              <p className="text-lg text-gray-300">Generate and manage phone number variations with powerful tools</p>
-            </header>
-            <LandingPage onNavigate={setCurrentView} />
-          </>
-        );
+        return <LandingPage onNavigate={setCurrentView} />;
       case 'shuffle':
         return <NumberShuffler onBack={() => setCurrentView('landing')} />;
       case 'viewer':
@@ -40,7 +28,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-teal-900 to-amber-900 text-white">
       <div className="container mx-auto px-4 py-12">
         {renderView()}
       </div>
