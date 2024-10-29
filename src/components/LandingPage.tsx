@@ -7,6 +7,14 @@ interface LandingPageProps {
 
 const tools = [
   {
+    id: 'viewer',
+    name: 'Table Viewer',
+    description: 'View, manage, and analyze phone numbers from CSV files with advanced features',
+    icon: Table,
+    gradient: 'from-teal-500 to-cyan-500',
+    delay: '100'
+  },
+  {
     id: 'shuffle',
     name: 'Number Shuffler',
     description: 'Generate intelligent variations of phone numbers using advanced algorithms',
@@ -14,14 +22,7 @@ const tools = [
     gradient: 'from-emerald-500 to-teal-500',
     delay: '0'
   },
-  {
-    id: 'viewer',
-    name: 'CSV Viewer',
-    description: 'View, manage, and analyze phone numbers from CSV files with advanced features',
-    icon: Table,
-    gradient: 'from-teal-500 to-cyan-500',
-    delay: '100'
-  },
+ 
   {
     id: 'manual',
     name: 'Manual Shuffle',
