@@ -1,111 +1,214 @@
-import React, { useState } from 'react';
-import { Shuffle, Download, ChevronDown, ChevronUp, ArrowLeft } from 'lucide-react';
-import { ShuffleMethod } from '../shuffleLogic/types';
-import { shuffleMethods } from '../shuffleLogic';
-import { downloadCSV } from '../shuffleLogic/utils';
+import React, { useState, useRef } from 'react';
+import { Upload, Download, ArrowLeft } from 'lucide-react';
+import { SHUFFLE_CONFIG } from '../config';
 
-interface NumberShufflerProps {
+interface ManualShuffleProps {
   onBack: () => void;
 }
 
-function NumberShuffler({ onBack }: NumberShufflerProps) {
-  const [selectedMethod, setSelectedMethod] = useState<ShuffleMethod | null>(null);
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [isMethodListOpen, setIsMethodListOpen] = useState(false);
+function ManualShuffle({ onBack }: ManualShuffleProps) {
+  const [numbers, setNumbers] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const mergeFilesRef = useRef<HTMLInputElement>(null);
 
-  const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, '').slice(0, 10);
-    setPhoneNumber(value);
+  const formatNumber = (input: string): string => {
+    const cleaned = input.replace(/\D/g, '');
+    if (cleaned.length === 10) {
+      return cleaned;
+    }
+    return '';
   };
 
-  const handleMethodSelect = (method: ShuffleMethod) => {
-    setSelectedMethod(method);
-    setIsMethodListOpen(false);
+  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+
+    const lines = value.split('\n');
+    const formattedNumbers: string[] = [];
+
+    lines.forEach(line => {
+      const formattedNumber = formatNumber(line);
+      if (formattedNumber) {
+        SHUFFLE_CONFIG.prefixes.forEach(prefix => {
+          formattedNumbers.push(prefix + formattedNumber.substring(3));
+        });
+      }
+    });
+
+    // If we reach the end of a number (10 digits), add a newline
+    if (value.length > inputValue.length && formatNumber(value.split('\n').pop() || '').length === 10) {
+      setInputValue(value + '\n');
+    }
+
+    setNumbers([...new Set(formattedNumbers)]);
   };
 
-  const handleGenerate = () => {
-    if (!selectedMethod || !phoneNumber || phoneNumber.length !== 10) {
-      alert('Please enter a valid 10-digit phone number and select a shuffle method.');
+  const downloadCSV = () => {
+    if (numbers.length === 0) return;
+    
+    const csvContent = 'Phone Numbers\n' + numbers.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'shuffled_numbers.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = e.target?.result as string;
+        setInputValue(text);
+        processNumbers(text);
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  const handleMergeFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const allNumbers = new Set<string>();
+    let filesProcessed = 0;
+
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        const lines = content.split('\n');
+        lines.forEach((line, index) => {
+          if (index > 0 && line.trim()) {
+            allNumbers.add(line.trim());
+          }
+        });
+
+        filesProcessed++;
+        if (filesProcessed === files.length) {
+          setNumbers(Array.from(allNumbers));
+          setInputValue(Array.from(allNumbers).join('\n'));
+        }
+      };
+      reader.readAsText(file);
+    });
+  };
+
+  const processNumbers = (input: string) => {
+    const inputNumbers = input.split('\n').filter(number => number.trim() !== "");
+    if (inputNumbers.length > 500) {
+      alert('Please enter up to 500 numbers only.');
       return;
     }
 
-    const numbers = selectedMethod.generate(phoneNumber);
-    downloadCSV(numbers, `${selectedMethod.id}_shuffled_numbers.csv`);
+    let modifiedNumbers: string[] = [];
+    inputNumbers.forEach((number) => {
+      const baseNumber = number.trim();
+      if (baseNumber.length === 10 && !isNaN(Number(baseNumber))) {
+        SHUFFLE_CONFIG.prefixes.forEach(prefix => {
+          const modifiedNumber = prefix + baseNumber.substring(3);
+          if (modifiedNumber.length === 10) {
+            modifiedNumbers.push(modifiedNumber);
+          }
+        });
+      }
+    });
+
+    modifiedNumbers = [...new Set(modifiedNumbers)];
+    modifiedNumbers.sort((a, b) => {
+      const prefixOrder: { [key: string]: number } = { 
+        "050": 0, "054": 1, "056": 2, "052": 3, "055": 4 
+      };
+      return prefixOrder[a.substring(0, 3)] - prefixOrder[b.substring(0, 3)];
+    });
+
+    setNumbers(modifiedNumbers);
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       <button
         onClick={onBack}
-        className="mb-8 px-4 py-2 flex items-center text-white/70 hover:text-white transition-colors"
+        className="mb-8 px-4 py-2 flex items-center text-white/70 hover:text-white transition-colors animate-slideIn"
       >
         <ArrowLeft className="w-5 h-5 mr-2" />
         Back to Tools
       </button>
 
-      <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
-        <div className="space-y-6">
-          {/* Phone Number Input */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Phone Number</label>
-            <div className="relative">
-              <input
-                type="text"
-                value={phoneNumber}
-                onChange={handlePhoneNumberChange}
-                placeholder="Enter 10-digit number"
-                className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
-                maxLength={10}
-              />
+      <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl animate-scaleIn">
+        <div className="relative mb-8">
+          <textarea
+            value={inputValue}
+            onChange={handleTextAreaChange}
+            className="w-full h-96 p-6 bg-white/5 border border-white/20 rounded-lg text-white resize-none focus:outline-none focus:border-emerald-500 focus-ring transition-all font-mono glass-morphism"
+            placeholder="Enter ten-digit numbers (automatically formatted)"
+          />
+          <div className="absolute top-4 right-4 flex space-x-2">
+            <div className="px-3 py-1 bg-emerald-500/20 rounded-full text-xs text-emerald-300">
+              {inputValue.split('\n').filter(Boolean).length} numbers
             </div>
           </div>
-
-          {/* Method Selector */}
-          <div className="relative">
-            <label className="block text-sm font-medium mb-2">Shuffle Method</label>
-            <button
-              onClick={() => setIsMethodListOpen(!isMethodListOpen)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg flex items-center justify-between hover:bg-white/10 transition-all"
-            >
-              <span>{selectedMethod?.name || 'Select a method'}</span>
-              {isMethodListOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-            </button>
-
-            {isMethodListOpen && (
-              <div className="absolute z-10 w-full mt-2 bg-gray-900 border border-white/20 rounded-lg shadow-xl max-h-96 overflow-y-auto">
-                {shuffleMethods.map((method) => (
-                  <button
-                    key={method.id}
-                    onClick={() => handleMethodSelect(method)}
-                    className="w-full px-4 py-3 text-left hover:bg-white/10 transition-all flex items-center space-x-3"
-                  >
-                    <Shuffle className="w-5 h-5" />
-                    <div>
-                      <div className="font-medium">{method.name}</div>
-                      <div className="text-sm text-gray-400">{method.description}</div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Generate Button */}
-          <button
-            onClick={handleGenerate}
-            disabled={!selectedMethod || phoneNumber.length !== 10}
-            className="w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg font-medium flex items-center justify-center space-x-2 hover:from-purple-500 hover:to-pink-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Download className="w-5 h-5" />
-            <span>Generate & Download CSV</span>
-          </button>
         </div>
 
-        {/* Selected Method Info */}
-        {selectedMethod && (
-          <div className="mt-8 p-4 bg-white/5 rounded-lg">
-            <h3 className="font-medium mb-2">{selectedMethod.name}</h3>
-            <p className="text-sm text-gray-300">{selectedMethod.description}</p>
+        <div className="flex flex-wrap gap-4 mb-8">
+          <button
+            onClick={downloadCSV}
+            disabled={numbers.length === 0}
+            className="flex items-center px-6 py-4 bg-gradient-to-r from-emerald-600 to-amber-600 rounded-lg font-medium hover:from-emerald-500 hover:to-amber-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-glow hover:shadow-glow-lg group"
+          >
+            <Download className="w-5 h-5 mr-2 group-hover:animate-bounce-slow" />
+            <span>Download CSV</span>
+          </button>
+
+          <label className="flex items-center px-6 py-4 bg-white/5 border border-white/20 rounded-lg cursor-pointer hover:bg-white/10 transition-all group glass-morphism">
+            <Upload className="w-5 h-5 mr-2 group-hover:animate-pulse-slow" />
+            <span>Upload CSV</span>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+          </label>
+
+          <label className="flex items-center px-6 py-4 bg-white/5 border border-white/20 rounded-lg cursor-pointer hover:bg-white/10 transition-all group glass-morphism">
+            <Upload className="w-5 h-5 mr-2 group-hover:animate-pulse-slow" />
+            <span>Merge CSV Files</span>
+            <input
+              ref={mergeFilesRef}
+              type="file"
+              accept=".csv"
+              multiple
+              onChange={handleMergeFiles}
+              className="hidden"
+            />
+          </label>
+        </div>
+
+        {numbers.length > 0 && (
+          <div className="overflow-x-auto animate-fadeIn">
+            <table className="w-full table-hover">
+              <thead>
+                <tr className="border-b border-white/10">
+                  <th className="px-6 py-3 text-left text-sm font-semibold">#</th>
+                  <th className="px-6 py-3 text-left text-sm font-semibold">Number</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/10">
+                {numbers.map((number, index) => (
+                  <tr key={index} className="hover:bg-white/5 transition-colors">
+                    <td className="px-6 py-4 text-sm">{index + 1}</td>
+                    <td className="px-6 py-4 font-mono">{number}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
@@ -113,4 +216,4 @@ function NumberShuffler({ onBack }: NumberShufflerProps) {
   );
 }
 
-export default NumberShuffler;
+export default ManualShuffle;
