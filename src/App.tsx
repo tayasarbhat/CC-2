@@ -18,8 +18,8 @@ function App() {
           <>
             <header className="text-center mb-12">
               <div className="flex items-center justify-center mb-4">
-                <Phone className="w-12 h-12 mr-4" />
-                <h1 className="text-4xl font-bold">Advanced Phone Number Tools</h1>
+                
+              <h1 className="text-4xl font-bold">Advanced Phone Number Tools</h1>
               </div>
               <p className="text-lg text-gray-300">Generate and manage phone number variations with powerful tools</p>
             </header>
