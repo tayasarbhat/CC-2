@@ -119,7 +119,7 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
           <label className="flex flex-col items-center justify-center w-full p-12 border-2 border-dashed border-white/20 rounded-lg cursor-pointer hover:border-white/40 transition-all group">
             <div className="flex items-center justify-center mb-4">
               <Upload className="w-12 h-12 transition-transform group-hover:scale-110 duration-300" />
-              <FileText className="w-8 h-8 ml-2 text-purple-400" />
+              
             </div>
             <div className="space-y-2 text-center">
               <p className="text-xl font-semibold">Drop your CSV file here</p>
