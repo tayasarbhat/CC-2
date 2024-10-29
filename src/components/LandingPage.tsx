@@ -48,7 +48,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
           <Sparkles className="w-4 h-4 mr-2 text-amber-400" />
           <span className="text-sm">Advanced Phone Number Tools</span>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-emerald-400 to-amber-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent">
           Transform Your Numbers
         </h1>
         <p className="text-lg text-gray-400 max-w-2xl mx-auto">
