@@ -8,8 +8,21 @@ interface ManualShuffleProps {
 
 function ManualShuffle({ onBack }: ManualShuffleProps) {
   const [numbers, setNumbers] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const mergeFilesRef = useRef<HTMLInputElement>(null);
+
+  const formatInput = (input: string): string => {
+    const digitsOnly = input.replace(/\D/g, '');
+    const lines = digitsOnly.match(/.{1,10}/g) || [];
+    return lines.join('\n');
+  };
+
+  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const formattedValue = formatInput(e.target.value);
+    setInputValue(formattedValue);
+    processNumbers(formattedValue);
+  };
 
   const processNumbers = (input: string) => {
     const inputNumbers = input.split('\n').filter(number => number.trim() !== "");
@@ -42,10 +55,6 @@ function ManualShuffle({ onBack }: ManualShuffleProps) {
     setNumbers(modifiedNumbers);
   };
 
-  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    processNumbers(e.target.value);
-  };
-
   const downloadCSV = () => {
     if (numbers.length === 0) return;
     
@@ -66,7 +75,9 @@ function ManualShuffle({ onBack }: ManualShuffleProps) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const text = e.target?.result as string;
-        processNumbers(text);
+        const formattedText = formatInput(text);
+        setInputValue(formattedText);
+        processNumbers(formattedText);
       };
       reader.readAsText(file);
     }
@@ -92,6 +103,8 @@ function ManualShuffle({ onBack }: ManualShuffleProps) {
 
         filesProcessed++;
         if (filesProcessed === files.length) {
+          const formattedNumbers = Array.from(allNumbers).join('\n');
+          setInputValue(formattedNumbers);
           setNumbers(Array.from(allNumbers));
         }
       };
@@ -111,8 +124,9 @@ function ManualShuffle({ onBack }: ManualShuffleProps) {
 
       <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
         <textarea
-          className="w-full h-96 mb-6 p-4 bg-white/5 border border-white/20 rounded-lg text-white resize-none focus:outline-none focus:border-purple-500 transition-all"
-          placeholder="Enter up to 500 ten-digit numbers (each on a new line)"
+          value={inputValue}
+          className="w-full h-96 mb-6 p-4 bg-white/5 border border-white/20 rounded-lg text-white resize-none focus:outline-none focus:border-purple-500 transition-all font-mono"
+          placeholder="Enter ten-digit numbers (automatically formatted)"
           onChange={handleTextAreaChange}
         />
 
