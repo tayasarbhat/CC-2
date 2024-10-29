@@ -12,16 +12,91 @@ function ManualShuffle({ onBack }: ManualShuffleProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const mergeFilesRef = useRef<HTMLInputElement>(null);
 
-  const formatInput = (input: string): string => {
-    const digitsOnly = input.replace(/\D/g, '');
-    const lines = digitsOnly.match(/.{1,10}/g) || [];
-    return lines.join('\n');
+  const formatNumber = (input: string): string => {
+    const cleaned = input.replace(/\D/g, '');
+    if (cleaned.length === 10) {
+      return cleaned;
+    }
+    return '';
   };
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const formattedValue = formatInput(e.target.value);
-    setInputValue(formattedValue);
-    processNumbers(formattedValue);
+    const value = e.target.value;
+    setInputValue(value);
+
+    const lines = value.split('\n');
+    const formattedNumbers: string[] = [];
+
+    lines.forEach(line => {
+      const formattedNumber = formatNumber(line);
+      if (formattedNumber) {
+        SHUFFLE_CONFIG.prefixes.forEach(prefix => {
+          formattedNumbers.push(prefix + formattedNumber.substring(3));
+        });
+      }
+    });
+
+    // If we reach the end of a number (10 digits), add a newline
+    if (value.length > inputValue.length && formatNumber(value.split('\n').pop() || '').length === 10) {
+      setInputValue(value + '\n');
+    }
+
+    setNumbers([...new Set(formattedNumbers)]);
+  };
+
+  const downloadCSV = () => {
+    if (numbers.length === 0) return;
+    
+    const csvContent = 'Phone Numbers\n' + numbers.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'shuffled_numbers.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = e.target?.result as string;
+        setInputValue(text);
+        processNumbers(text);
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  const handleMergeFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const allNumbers = new Set<string>();
+    let filesProcessed = 0;
+
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        const lines = content.split('\n');
+        lines.forEach((line, index) => {
+          if (index > 0 && line.trim()) {
+            allNumbers.add(line.trim());
+          }
+        });
+
+        filesProcessed++;
+        if (filesProcessed === files.length) {
+          setNumbers(Array.from(allNumbers));
+          setInputValue(Array.from(allNumbers).join('\n'));
+        }
+      };
+      reader.readAsText(file);
+    });
   };
 
   const processNumbers = (input: string) => {
@@ -55,93 +130,43 @@ function ManualShuffle({ onBack }: ManualShuffleProps) {
     setNumbers(modifiedNumbers);
   };
 
-  const downloadCSV = () => {
-    if (numbers.length === 0) return;
-    
-    const csvContent = 'Phone Numbers\n' + numbers.join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'shuffled_numbers.csv';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const text = e.target?.result as string;
-        const formattedText = formatInput(text);
-        setInputValue(formattedText);
-        processNumbers(formattedText);
-      };
-      reader.readAsText(file);
-    }
-  };
-
-  const handleMergeFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length === 0) return;
-
-    const allNumbers = new Set<string>();
-    let filesProcessed = 0;
-
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        const lines = content.split('\n');
-        lines.forEach((line, index) => {
-          if (index > 0 && line.trim()) {
-            allNumbers.add(line.trim());
-          }
-        });
-
-        filesProcessed++;
-        if (filesProcessed === files.length) {
-          const formattedNumbers = Array.from(allNumbers).join('\n');
-          setInputValue(formattedNumbers);
-          setNumbers(Array.from(allNumbers));
-        }
-      };
-      reader.readAsText(file);
-    });
-  };
-
   return (
     <div className="max-w-6xl mx-auto">
       <button
         onClick={onBack}
-        className="mb-8 px-4 py-2 flex items-center text-white/70 hover:text-white transition-colors"
+        className="mb-8 px-4 py-2 flex items-center text-white/70 hover:text-white transition-colors animate-slideIn"
       >
         <ArrowLeft className="w-5 h-5 mr-2" />
         Back to Tools
       </button>
 
-      <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
-        <textarea
-          value={inputValue}
-          className="w-full h-96 mb-6 p-4 bg-white/5 border border-white/20 rounded-lg text-white resize-none focus:outline-none focus:border-purple-500 transition-all font-mono"
-          placeholder="Enter ten-digit numbers (automatically formatted)"
-          onChange={handleTextAreaChange}
-        />
+      <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl animate-scaleIn">
+        <div className="relative mb-8">
+          <textarea
+            value={inputValue}
+            onChange={handleTextAreaChange}
+            className="w-full h-96 p-6 bg-white/5 border border-white/20 rounded-lg text-white resize-none focus:outline-none focus:border-emerald-500 focus-ring transition-all font-mono glass-morphism"
+            placeholder="Enter ten-digit numbers (automatically formatted)"
+          />
+          <div className="absolute top-4 right-4 flex space-x-2">
+            <div className="px-3 py-1 bg-emerald-500/20 rounded-full text-xs text-emerald-300">
+              {inputValue.split('\n').filter(Boolean).length} numbers
+            </div>
+          </div>
+        </div>
 
         <div className="flex flex-wrap gap-4 mb-8">
           <button
             onClick={downloadCSV}
             disabled={numbers.length === 0}
-            className="flex items-center px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg font-medium hover:from-purple-500 hover:to-pink-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center px-6 py-4 bg-gradient-to-r from-emerald-600 to-amber-600 rounded-lg font-medium hover:from-emerald-500 hover:to-amber-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-glow hover:shadow-glow-lg group"
           >
-            <Download className="w-5 h-5 mr-2" />
+            <Download className="w-5 h-5 mr-2 group-hover:animate-bounce-slow" />
             <span>Download CSV</span>
           </button>
 
-          <label className="flex items-center px-6 py-4 bg-white/5 border border-white/20 rounded-lg cursor-pointer hover:bg-white/10 transition-all">
-            <Upload className="w-5 h-5 mr-2" />
+          <label className="flex items-center px-6 py-4 bg-white/5 border border-white/20 rounded-lg cursor-pointer hover:bg-white/10 transition-all group glass-morphism">
+            <Upload className="w-5 h-5 mr-2 group-hover:animate-pulse-slow" />
             <span>Upload CSV</span>
             <input
               ref={fileInputRef}
@@ -152,8 +177,8 @@ function ManualShuffle({ onBack }: ManualShuffleProps) {
             />
           </label>
 
-          <label className="flex items-center px-6 py-4 bg-white/5 border border-white/20 rounded-lg cursor-pointer hover:bg-white/10 transition-all">
-            <Upload className="w-5 h-5 mr-2" />
+          <label className="flex items-center px-6 py-4 bg-white/5 border border-white/20 rounded-lg cursor-pointer hover:bg-white/10 transition-all group glass-morphism">
+            <Upload className="w-5 h-5 mr-2 group-hover:animate-pulse-slow" />
             <span>Merge CSV Files</span>
             <input
               ref={mergeFilesRef}
@@ -167,8 +192,8 @@ function ManualShuffle({ onBack }: ManualShuffleProps) {
         </div>
 
         {numbers.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full">
+          <div className="overflow-x-auto animate-fadeIn">
+            <table className="w-full table-hover">
               <thead>
                 <tr className="border-b border-white/10">
                   <th className="px-6 py-3 text-left text-sm font-semibold">#</th>
@@ -179,7 +204,7 @@ function ManualShuffle({ onBack }: ManualShuffleProps) {
                 {numbers.map((number, index) => (
                   <tr key={index} className="hover:bg-white/5 transition-colors">
                     <td className="px-6 py-4 text-sm">{index + 1}</td>
-                    <td className="px-6 py-4">{number}</td>
+                    <td className="px-6 py-4 font-mono">{number}</td>
                   </tr>
                 ))}
               </tbody>
