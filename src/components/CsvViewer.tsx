@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ArrowLeft, Check, Upload, Search, X, FileText, PhoneCall, ArrowUpDown } from 'lucide-react';
 
 interface CsvViewerProps {
@@ -7,6 +7,12 @@ interface CsvViewerProps {
 
 type SortType = 'all' | 'called' | 'remaining';
 
+interface FileHistory {
+  fileName: string;
+  numbers: string[];
+  timestamp: number;
+}
+
 const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
   const [entries, setEntries] = useState<Array<{ number: string; comment: string }>>([]);
   const [clickedNumbers, setClickedNumbers] = useState<Set<string>>(new Set());
@@ -14,7 +20,29 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortType, setSortType] = useState<SortType>('all');
+  const [fileHistory, setFileHistory] = useState<FileHistory[]>([]);
+  const [currentFileName, setCurrentFileName] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Load file history from localStorage on component mount
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('fileHistory');
+    if (savedHistory) {
+      setFileHistory(JSON.parse(savedHistory));
+    }
+
+    // Load clicked numbers from localStorage
+    const savedClickedNumbers = new Set<string>();
+    for (const key of Object.keys(localStorage)) {
+      if (key.startsWith('clicked_')) {
+        const number = key.replace('clicked_', '');
+        if (localStorage.getItem(key) === 'clicked') {
+          savedClickedNumbers.add(number);
+        }
+      }
+    }
+    setClickedNumbers(savedClickedNumbers);
+  }, []);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -27,20 +55,38 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
     reader.onload = (e) => {
       const content = e.target?.result as string;
       const lines = content.split('\n');
-      const newEntries = lines
-        .slice(1)
-        .filter(line => line.trim())
-        .map(line => {
-          const number = line.trim();
-          const savedComment = localStorage.getItem(`comment_${number}`) || '';
-          const wasClicked = localStorage.getItem(`clicked_${number}`) === 'clicked';
-          
-          if (wasClicked) {
-            setClickedNumbers(prev => new Set([...prev, number]));
+      const numbers = lines.slice(1).filter(line => line.trim());
+
+      // Check if file was previously processed
+      const existingFile = fileHistory.find(f => f.fileName === file.name);
+      
+      if (!existingFile) {
+        // New file - reset clicked numbers for these numbers
+        const newClickedNumbers = new Set(clickedNumbers);
+        numbers.forEach(number => {
+          if (newClickedNumbers.has(number)) {
+            newClickedNumbers.delete(number);
+            localStorage.removeItem(`clicked_${number}`);
           }
-          
-          return { number, comment: savedComment };
         });
+        setClickedNumbers(newClickedNumbers);
+
+        // Add to file history
+        const newHistory = [...fileHistory, {
+          fileName: file.name,
+          numbers,
+          timestamp: Date.now()
+        }];
+        setFileHistory(newHistory);
+        localStorage.setItem('fileHistory', JSON.stringify(newHistory));
+      }
+
+      setCurrentFileName(file.name);
+      
+      const newEntries = numbers.map(number => ({
+        number: number.trim(),
+        comment: localStorage.getItem(`comment_${number}`) || ''
+      }));
 
       setEntries(newEntries);
     };
@@ -103,24 +149,30 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
       return true;
     });
 
+  const currentFileStats = {
+    total: entries.length,
+    called: entries.filter(entry => clickedNumbers.has(entry.number)).length,
+    remaining: entries.filter(entry => !clickedNumbers.has(entry.number)).length
+  };
+
   const statsCards = [
     {
       title: "Total Numbers",
-      value: entries.length,
+      value: currentFileStats.total,
       icon: <FileText className="w-5 h-5 text-emerald-400" />,
       onClick: () => setSortType('all'),
       active: sortType === 'all'
     },
     {
       title: "Called Numbers",
-      value: clickedNumbers.size,
+      value: currentFileStats.called,
       icon: <PhoneCall className="w-5 h-5 text-amber-400" />,
       onClick: () => setSortType('called'),
       active: sortType === 'called'
     },
     {
       title: "Remaining",
-      value: entries.length - clickedNumbers.size,
+      value: currentFileStats.remaining,
       icon: <Check className="w-5 h-5 text-purple-400" />,
       onClick: () => setSortType('remaining'),
       active: sortType === 'remaining'
@@ -167,6 +219,12 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
 
         {entries.length > 0 && (
           <div className="mt-8 space-y-6 animate-fadeIn">
+            {currentFileName && (
+              <div className="text-sm text-gray-400 mb-4">
+                Current file: {currentFileName}
+              </div>
+            )}
+            
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               {statsCards.map((card, index) => (
                 <button
@@ -196,7 +254,7 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
                     <div className="mt-2 h-1 bg-white/10 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-gradient-to-r from-emerald-500 to-amber-500 transition-all duration-500"
-                        style={{ width: `${(clickedNumbers.size / entries.length) * 100}%` }}
+                        style={{ width: `${(currentFileStats.called / currentFileStats.total) * 100}%` }}
                       />
                     </div>
                   )}
