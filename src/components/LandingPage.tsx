@@ -16,8 +16,8 @@ const tools = [
   },
   {
     id: 'shuffle',
-    name: 'Number Shuffler',
-    description: 'Generate intelligent variations of phone numbers using advanced algorithms',
+    name: 'Manual Shuffle',
+    description: 'Manually input and process phone numbers with bulk operations and CSV management',
     icon: Shuffle,
     gradient: 'from-emerald-500 to-teal-500',
     delay: '0'
@@ -25,8 +25,9 @@ const tools = [
  
   {
     id: 'manual',
-    name: 'Manual Shuffle',
-    description: 'Manually input and process phone numbers with bulk operations and CSV management',
+   
+    name: 'Number Shuffler',
+    description: 'Generate intelligent variations of phone numbers using advanced algorithms',
     icon: FileText,
     gradient: 'from-cyan-500 to-amber-500',
     delay: '200'
