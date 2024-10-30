@@ -59,7 +59,7 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
 
       // Check if file was previously processed
       const existingFile = fileHistory.find(f => f.fileName === file.name);
-      
+
       if (!existingFile) {
         // New file - reset clicked numbers for these numbers
         const newClickedNumbers = new Set(clickedNumbers);
@@ -82,7 +82,7 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
       }
 
       setCurrentFileName(file.name);
-      
+
       const newEntries = numbers.map(number => ({
         number: number.trim(),
         comment: localStorage.getItem(`comment_${number}`) || ''
@@ -113,7 +113,7 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
 
     const files = Array.from(e.dataTransfer.files);
     const csvFile = files.find(file => file.type === 'text/csv' || file.name.endsWith('.csv'));
-    
+
     if (csvFile) {
       processFile(csvFile);
     }
@@ -122,11 +122,12 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      setClickedNumbers(prev => new Set([...prev, text]));
-      localStorage.setItem(`clicked_${text}`, 'clicked');
     } catch (err) {
       console.error('Failed to copy:', err);
+      alert('Failed to copy number to clipboard.');
     }
+    setClickedNumbers(prev => new Set([...prev, text]));
+    localStorage.setItem(`clicked_${text}`, 'clicked');
   };
 
   const handleCommentChange = (number: string, comment: string) => {
@@ -139,8 +140,8 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
   };
 
   const filteredAndSortedEntries = entries
-    .filter(entry => 
-      entry.number.includes(searchTerm) || 
+    .filter(entry =>
+      entry.number.includes(searchTerm) ||
       entry.comment.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .filter(entry => {
@@ -190,7 +191,7 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
       </button>
 
       <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
-        <div 
+        <div
           className={`relative transition-all duration-300 ${
             isDragging ? 'scale-105 border-emerald-500' : ''
           }`}
@@ -224,15 +225,15 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
                 Current file: {currentFileName}
               </div>
             )}
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               {statsCards.map((card, index) => (
                 <button
                   key={index}
                   onClick={card.onClick}
                   className={`text-left bg-white/5 rounded-xl p-4 backdrop-blur-lg border transition-all ${
-                    card.active 
-                      ? 'border-emerald-500/50 shadow-glow' 
+                    card.active
+                      ? 'border-emerald-500/50 shadow-glow'
                       : 'border-white/10 hover:border-white/20'
                   }`}
                 >
@@ -240,9 +241,11 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
                     <div>
                       <div className="flex items-center">
                         <p className="text-sm text-gray-400">{card.title}</p>
-                        <ArrowUpDown className={`w-4 h-4 ml-2 transition-opacity ${
-                          card.active ? 'opacity-100' : 'opacity-0'
-                        }`} />
+                        <ArrowUpDown
+                          className={`w-4 h-4 ml-2 transition-opacity ${
+                            card.active ? 'opacity-100' : 'opacity-0'
+                          }`}
+                        />
                       </div>
                       <p className="text-2xl font-bold mt-1">{card.value}</p>
                     </div>
@@ -252,9 +255,14 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
                   </div>
                   {card.title === "Called Numbers" && entries.length > 0 && (
                     <div className="mt-2 h-1 bg-white/10 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="h-full bg-gradient-to-r from-emerald-500 to-amber-500 transition-all duration-500"
-                        style={{ width: `${(currentFileStats.called / currentFileStats.total) * 100}%` }}
+                        style={{
+                          width: `${
+                            (currentFileStats.called / currentFileStats.total) *
+                            100
+                          }%`
+                        }}
                       />
                     </div>
                   )}
@@ -298,40 +306,50 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-white/10">
-                    <th className="px-6 py-4 text-left text-sm font-semibold">#</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Phone Number</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Comment</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">
+                      #
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">
+                      Phone Number
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">
+                      Comment
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/10">
-                  {filteredAndSortedEntries.slice(0, recordsPerPage).map((entry, index) => (
-                    <tr 
-                      key={index}
-                      className="group hover:bg-white/5 transition-colors"
-                    >
-                      <td className="px-6 py-4 text-sm">{index + 1}</td>
-                      <td className="px-6 py-4">
-                        <button
-                          onClick={() => copyToClipboard(entry.number)}
-                          className="flex items-center space-x-2 text-lg font-medium hover:text-emerald-400 transition-colors"
-                        >
-                          <span>{entry.number}</span>
-                          {clickedNumbers.has(entry.number) && (
-                            <Check className="w-4 h-4 text-emerald-400" />
-                          )}
-                        </button>
-                      </td>
-                      <td className="px-6 py-4">
-                        <input
-                          type="text"
-                          value={entry.comment}
-                          onChange={(e) => handleCommentChange(entry.number, e.target.value)}
-                          className="w-full bg-white/5 border border-transparent rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 transition-all group-hover:border-white/20"
-                          placeholder="Add a comment..."
-                        />
-                      </td>
-                    </tr>
-                  ))}
+                  {filteredAndSortedEntries
+                    .slice(0, recordsPerPage)
+                    .map((entry, index) => (
+                      <tr
+                        key={index}
+                        className="group hover:bg-white/5 transition-colors"
+                      >
+                        <td className="px-6 py-4 text-sm">{index + 1}</td>
+                        <td className="px-6 py-4">
+                          <button
+                            onClick={() => copyToClipboard(entry.number)}
+                            className="flex items-center space-x-2 text-lg font-medium hover:text-emerald-400 transition-colors"
+                          >
+                            <span>{entry.number}</span>
+                            {clickedNumbers.has(entry.number) && (
+                              <Check className="w-4 h-4 text-emerald-400" />
+                            )}
+                          </button>
+                        </td>
+                        <td className="px-6 py-4">
+                          <input
+                            type="text"
+                            value={entry.comment}
+                            onChange={(e) =>
+                              handleCommentChange(entry.number, e.target.value)
+                            }
+                            className="w-full bg-white/5 border border-transparent rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 transition-all group-hover:border-white/20"
+                            placeholder="Add a comment..."
+                          />
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
