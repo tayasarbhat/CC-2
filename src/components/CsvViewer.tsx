@@ -328,10 +328,14 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
                         <td className="px-6 py-4 text-sm">{index + 1}</td>
                         <td className="px-6 py-4">
                           <button
-                            onClick={() => copyToClipboard(entry.number)}
+                            onMouseDown={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              copyToClipboard(entry.number);
+                            }}
                             className="flex items-center space-x-2 text-lg font-medium hover:text-emerald-400 transition-colors"
                           >
-                            <span>{entry.number}</span>
+                            <span className="phone-number">{entry.number}</span>
                             {clickedNumbers.has(entry.number) && (
                               <Check className="w-4 h-4 text-emerald-400" />
                             )}
