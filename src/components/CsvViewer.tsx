@@ -292,13 +292,14 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
               <select
                 value={recordsPerPage}
                 onChange={(e) => setRecordsPerPage(Number(e.target.value))}
-                className="bg-white/1 border border-green/20 rounded-lg px-4 py-2 focus:outline-none focus:border-green-500 transition-all"
+                className="bg-white/5 border border-white/20 rounded-lg px-4 py-2 focus:outline-none focus:border-emerald-500 transition-all"
               >
-                <option value={10}>10 per page</option>
-                <option value={20}>20 per page</option>
-                <option value={40}>40 per page</option>
-                <option value={100}>100 per page</option>
-                <option value={entries.length}>All records</option>
+                <option value={10} className="bg-gray-800">10 per page</option>
+                <option value={20} className="bg-gray-800">20 per page</option>
+                <option value={40} className="bg-gray-800">40 per page</option>
+                <option value={100} className="bg-gray-800">100 per page</option>
+                <option value={entries.length} className="bg-gray-800">All records</option>
+</select>
               </select>
             </div>
 
