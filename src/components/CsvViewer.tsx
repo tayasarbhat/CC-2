@@ -299,7 +299,7 @@ const CsvViewer: React.FC<CsvViewerProps> = ({ onBack }) => {
                 <option value={40} className="bg-gray-800">40 per page</option>
                 <option value={100} className="bg-gray-800">100 per page</option>
                 <option value={entries.length} className="bg-gray-800">All records</option>
-</select>
+
               </select>
             </div>
 
