@@ -109,7 +109,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
         <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4">
           Albatross Communication Services
         </h2>
-        <h3 className="text-2xl font-bold text-indigo-600/70 text-center mb-4">Activations Dashboard</h3>
+        <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4">Activations Dashboard</h3>
         <div className="flex justify-center items-center space-x-6">
           <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg group-hover:scale-110 transition-transform duration-500">
             <Clock className="w-5 h-5 text-white" />
