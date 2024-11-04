@@ -114,11 +114,11 @@ function LandingPage({ onNavigate }: LandingPageProps) {
   const renderMedalIcon = (index: number) => {
     switch (index) {
       case 0:
-        return <Medal className="w-5 h-5 text-yellow-400" title="Gold Medal" />;
+        return <Medal className="w-5 h-5 text-yellow-400 inline ml-2" title="Gold Medal" />;
       case 1:
-        return <Medal className="w-5 h-5 text-gray-400" title="Silver Medal" />;
+        return <Medal className="w-5 h-5 text-gray-400 inline ml-2" title="Silver Medal" />;
       case 2:
-        return <Medal className="w-5 h-5 text-orange-500" title="Bronze Medal" />;
+        return <Medal className="w-5 h-5 text-orange-500 inline ml-2" title="Bronze Medal" />;
       default:
         return null;
     }
@@ -263,13 +263,8 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 <tr key={index} className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn hover:bg-white/10 transition-all duration-500">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
-                      {renderMedalIcon(index)}
-                      <div className="w-12 h-12 rounded-xl bg-indigo-500 flex items-center justify-center shadow-lg">
-                        <span className="text-lg font-bold text-white">
-                          {agent.name.charAt(0)}
-                        </span>
-                      </div>
                       <span className="font-semibold text-white">{agent.name}</span>
+                      {renderMedalIcon(index)}
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center text-emerald-600 font-semibold">{agent.silver}</td>
