@@ -107,19 +107,25 @@ function LandingPage({ onNavigate }: LandingPageProps) {
   return (
     <div className="max-w-6xl mx-auto space-y-12">
       {/* Header Section with Modernized Clock and Calendar */}
-      <div className="animate-fadeIn bg-white/5 backdrop-blur-lg rounded-xl p-6 mb-8 border border-white/10">
-        <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4">
-          Albatross Communication Services
-        </h2>
-        <h3 className="text-2xl font-bold text-indigo-600/70 text-center mb-4">Activations Dashboard</h3>
-        <div className="flex justify-center items-center space-x-6">
-          <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg group-hover:scale-110 transition-transform duration-500">
-            <Clock className="w-5 h-5 text-white" />
-            <span className="text-lg font-semibold text-white">{currentTime}</span>
-          </div>
-          <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg group-hover:scale-110 transition-transform duration-500">
-            <Calendar className="w-5 h-5 text-white" />
-            <span className="text-lg font-semibold text-white">{currentDate}</span>
+      <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
+        <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+          style={{ backgroundImage: 'linear-gradient(to right, from-indigo-400, to-pink-400)' }}></div>
+        <div className="relative bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 transition-all duration-500 group-hover:border-white/20">
+          <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4 animate-fadeIn">
+            Albatross Communication Services
+          </h2>
+          <h3 className="text-2xl font-bold text-indigo-600/70 text-center mb-4 animate-fadeIn">
+            Activations Dashboard
+          </h3>
+          <div className="flex justify-center items-center space-x-6 animate-fadeIn">
+            <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg group-hover:scale-110 transition-transform duration-500">
+              <Clock className="w-5 h-5 text-white" />
+              <span className="text-lg font-semibold text-white">{currentTime}</span>
+            </div>
+            <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg group-hover:scale-110 transition-transform duration-500">
+              <Calendar className="w-5 h-5 text-white" />
+              <span className="text-lg font-semibold text-white">{currentDate}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -174,7 +180,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 <Target className="w-7 h-7 text-white" />
               </div>
               <div className="ml-6">
-                <p className="text-sm font-bold text-indigo-600/70">Total Target</p>
+                <p className="text-sm font-medium text-indigo-600/70">Total Target</p>
                 <p className="text-3xl font-bold text-white">{totalTarget}</p>
               </div>
             </div>
@@ -192,7 +198,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 <Award className="w-7 h-7 text-white" />
               </div>
               <div className="ml-6">
-                <p className="text-sm font-bold text-indigo-600/70">Total Activations</p>
+                <p className="text-sm font-medium text-indigo-600/70">Total Activations</p>
                 <p className="text-3xl font-bold text-white">{totalActivations}</p>
               </div>
             </div>
@@ -210,7 +216,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 <Target className="w-7 h-7 text-white" />
               </div>
               <div className="ml-6">
-                <p className="text-sm font-bold text-indigo-600/70">Remaining Target</p>
+                <p className="text-sm font-medium text-indigo-600/70">Remaining Target</p>
                 <p className="text-3xl font-bold text-white">{remainingTarget}</p>
               </div>
             </div>
