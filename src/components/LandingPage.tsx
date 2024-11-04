@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Shuffle, Table, FileText, Layers, ArrowRight, Sparkles, Award, Target } from 'lucide-react';
+import { Shuffle, Table, FileText, Layers, ArrowRight, Sparkles } from 'lucide-react';
 
 interface LandingPageProps {
   onNavigate: (view: 'landing' | 'shuffle' | 'viewer' | 'manual' | 'merge') => void;
@@ -50,6 +50,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
       .then(response => response.json())
       .then(data => {
         const agents = data.map((row: any) => ({
+          name: row['Agent Name'] || '',
           silver: Number(row['Silver']) || 0,
           gold: Number(row['Gold']) || 0,
           platinum: Number(row['Platinum']) || 0,
@@ -57,15 +58,12 @@ function LandingPage({ onNavigate }: LandingPageProps) {
           target: Number(row['Target']) || 10 // Get the target from the new column, default to 10 if not present
         }));
 
-        // Helper function to calculate total activations
         const getTotalActivations = () =>
           agents.reduce((acc, agent) => acc + agent.silver + agent.gold + agent.platinum + agent.standard, 0);
 
-        // Helper function to calculate total target
         const getTotalTarget = () =>
           agents.reduce((acc, agent) => acc + agent.target, 0);
 
-        // Set values in the UI
         setTotalActivations(getTotalActivations());
         setRemainingTarget(getTotalTarget() - getTotalActivations());
       })
@@ -76,46 +74,6 @@ function LandingPage({ onNavigate }: LandingPageProps) {
 
   return (
     <div className="max-w-6xl mx-auto space-y-12">
-      {/* Total Activations and Remaining Target containers */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 animate-fadeIn">
-        <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
-          <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
-            style={{ backgroundImage: `linear-gradient(to right, from-indigo-500, to-purple-500)` }} />
-          <div className="relative h-full bg-white/5 backdrop-blur-lg rounded-xl p-4 md:p-8 border border-white/10 shadow-md">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 md:p-4 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-                <Award className="w-5 md:w-7 h-5 md:h-7 text-white" />
-              </div>
-            </div>
-            <h2 className="text-2xl font-bold mb-2 group-hover:text-emerald-400 transition-colors duration-300">
-              Total Activations
-            </h2>
-            <p className="text-gray-400 text-lg group-hover:text-gray-300 transition-colors duration-300">
-              {totalActivations}
-            </p>
-          </div>
-        </div>
-
-        <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
-          <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
-            style={{ backgroundImage: `linear-gradient(to right, from-blue-500, to-teal-500)` }} />
-          <div className="relative h-full bg-white/5 backdrop-blur-lg rounded-xl p-4 md:p-8 border border-white/10 shadow-md">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 md:p-4 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-                <Target className="w-5 md:w-7 h-5 md:h-7 text-white" />
-              </div>
-            </div>
-            <h2 className="text-2xl font-bold mb-2 group-hover:text-emerald-400 transition-colors duration-300">
-              Remaining Target
-            </h2>
-            <p className="text-gray-400 text-lg group-hover:text-gray-300 transition-colors duration-300">
-              {remainingTarget}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Existing header and tools section */}
       <div className="text-center space-y-4 animate-fadeIn">
         <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-4">
           <Sparkles className="w-4 h-4 mr-2 text-amber-400" />
@@ -169,11 +127,92 @@ function LandingPage({ onNavigate }: LandingPageProps) {
         })}
       </div>
 
-      <div className="text-center animate-fadeIn" style={{ animationDelay: '400ms' }}>
-        <div className="inline-flex items-center space-x-2 text-sm text-gray-400">
-          <span>Built with</span>
-          <span className="text-emerald-400">♥</span>
-          <span>by TAB</span>
+      <div className="animate-fadeIn mt-12">
+        <div className="max-w-7xl mx-auto px-6 py-8 glass-card rounded-2xl shadow-lg">
+          <header className="mb-8">
+            <h2 className="text-3xl font-bold text-indigo-600/70 gradient-text">Activations Dashboard</h2>
+            <div className="flex items-center gap-4 mt-2">
+              <div className="clock px-4 py-2 rounded-xl flex items-center gap-3">
+                <i data-lucide="clock" className="w-5 h-5 text-indigo-600"></i>
+                <span className="time-text font-semibold text-lg" id="current-time">00:00:00</span>
+              </div>
+              <div className="date-text flex items-center gap-3">
+                <i data-lucide="calendar" className="w-5 h-5 text-indigo-600"></i>
+                <span className="font-medium text-indigo-600/70" id="current-date"></span>
+              </div>
+            </div>
+          </header>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div className="stat-card rounded-2xl p-8">
+              <div className="flex items-center">
+                <div className="gradient-bg p-4 rounded-xl shadow-lg">
+                  <i data-lucide="users" className="w-7 h-7 text-white"></i>
+                </div>
+                <div className="ml-6">
+                  <p className="text-sm font-medium text-indigo-600/70">Total Agents</p>
+                  <p className="text-3xl font-bold text-gray-900" id="total-agents">14</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="stat-card rounded-2xl p-8">
+              <div className="flex items-center">
+                <div className="gradient-bg p-4 rounded-xl shadow-lg">
+                  <i data-lucide="award" className="w-7 h-7 text-white"></i>
+                </div>
+                <div className="ml-6">
+                  <p className="text-sm font-medium text-indigo-600/70">Total Activations</p>
+                  <p className="text-3xl font-bold text-gray-900" id="total-activations">{totalActivations}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="stat-card rounded-2xl p-8">
+              <div className="flex items-center">
+                <div className="gradient-bg p-4 rounded-xl shadow-lg">
+                  <i data-lucide="target" className="w-7 h-7 text-white"></i>
+                </div>
+                <div className="ml-6">
+                  <p className="text-sm font-medium text-indigo-600/70">Remaining Target</p>
+                  <p className="text-3xl font-bold text-gray-900" id="remaining-target">{remainingTarget}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="modern-table w-full" id="agents-table">
+              <thead>
+                <tr>
+                  <th className="text-left px-6 py-4 text-sm font-semibold text-indigo-600 uppercase tracking-wider">Agent Name</th>
+                  <th className="text-center px-6 py-4 text-sm font-semibold text-emerald-600 uppercase tracking-wider">Silver</th>
+                  <th className="text-center px-6 py-4 text-sm font-semibold text-amber-600 uppercase tracking-wider">Gold</th>
+                  <th className="text-center px-6 py-4 text-sm font-semibold text-violet-600 uppercase tracking-wider">Platinum</th>
+                  <th className="text-center px-6 py-4 text-sm font-semibold text-blue-600 uppercase tracking-wider">Standard</th>
+                  <th className="text-left px-6 py-4 text-sm font-semibold text-indigo-600 uppercase tracking-wider">Progress</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y-8 divide-transparent" id="agents-body">
+                {/* Table rows will be populated by JavaScript */}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td className="px-6 py-4 font-semibold text-gray-900">Total</td>
+                  <td className="px-6 py-4 text-center font-bold text-emerald-600" id="total-silver">0</td>
+                  <td className="px-6 py-4 text-center font-bold text-amber-600" id="total-gold">0</td>
+                  <td className="px-6 py-4 text-center font-bold text-violet-600" id="total-platinum">0</td>
+                  <td className="px-6 py-4 text-center font-bold text-blue-600" id="total-standard">0</td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <i data-lucide="activity" className="w-5 h-5 text-indigo-500"></i>
+                      <span className="font-semibold text-gray-900" id="total-progress">0/0 Total Activations</span>
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
         </div>
       </div>
     </div>
