@@ -118,6 +118,24 @@ function LandingPage({ onNavigate }: LandingPageProps) {
         </p>
       </div>
 
+      {/* Company Header and Current Time/Date */}
+      <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 mb-8 border border-white/10">
+        <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4">
+          Albatross Communication Services
+        </h2>
+        <h3 className="text-2xl font-bold text-indigo-600/70 text-center mb-4">Activations Dashboard</h3>
+        <div className="flex justify-center items-center space-x-6">
+          <div className="flex items-center gap-2">
+            <Clock className="w-5 h-5 text-indigo-600" />
+            <span className="text-lg font-semibold text-white">{currentTime}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Calendar className="w-5 h-5 text-indigo-600" />
+            <span className="text-lg font-semibold text-white">{currentDate}</span>
+          </div>
+        </div>
+      </div>
+
       {/* Tools Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {tools.map((tool) => {
