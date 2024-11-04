@@ -263,8 +263,15 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 <tr key={index} className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn hover:bg-white/10 transition-all duration-500">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
-                      <span className="font-semibold text-white">{agent.name}</span>
-                      {renderMedalIcon(index)}
+                      <div className="w-12 h-12 rounded-xl bg-indigo-500 flex items-center justify-center shadow-lg">
+                        <span className="text-lg font-bold text-white">
+                          {agent.name.charAt(0)}
+                        </span>
+                      </div>
+                      <span className="font-semibold text-white">
+                        {agent.name}
+                        {renderMedalIcon(index)}
+                      </span>
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center text-emerald-600 font-semibold">{agent.silver}</td>
