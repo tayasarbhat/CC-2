@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Shuffle, Table, FileText, Layers, ArrowRight, Sparkles } from 'lucide-react';
+import { Shuffle, Table, FileText, Layers, ArrowRight, Sparkles, Users, Award, Target, Activity, Calendar, Clock } from 'lucide-react';
 
 interface LandingPageProps {
   onNavigate: (view: 'landing' | 'shuffle' | 'viewer' | 'manual' | 'merge') => void;
@@ -41,28 +41,30 @@ const tools = [
 ];
 
 function LandingPage({ onNavigate }: LandingPageProps) {
+  const [agents, setAgents] = useState([]);
   const [totalActivations, setTotalActivations] = useState(0);
   const [remainingTarget, setRemainingTarget] = useState(0);
 
   useEffect(() => {
-    // Fetch data from Google Apps Script Web App
     fetch('https://script.google.com/macros/s/AKfycbx96S87lnh7haL6v5eajGkeRi_3-wTmXIvf21zQuV7jFUejC21ysKBi00orzM8Hm8pQnA/exec')
       .then(response => response.json())
       .then(data => {
-        const agents = data.map((row: any) => ({
+        const mappedAgents = data.map((row: any) => ({
           name: row['Agent Name'] || '',
           silver: Number(row['Silver']) || 0,
           gold: Number(row['Gold']) || 0,
           platinum: Number(row['Platinum']) || 0,
           standard: Number(row['Standard']) || 0,
-          target: Number(row['Target']) || 10 // Get the target from the new column, default to 10 if not present
+          target: Number(row['Target']) || 10 // Default to 10 if not provided
         }));
 
+        setAgents(mappedAgents);
+
         const getTotalActivations = () =>
-          agents.reduce((acc, agent) => acc + agent.silver + agent.gold + agent.platinum + agent.standard, 0);
+          mappedAgents.reduce((acc, agent) => acc + agent.silver + agent.gold + agent.platinum + agent.standard, 0);
 
         const getTotalTarget = () =>
-          agents.reduce((acc, agent) => acc + agent.target, 0);
+          mappedAgents.reduce((acc, agent) => acc + agent.target, 0);
 
         setTotalActivations(getTotalActivations());
         setRemainingTarget(getTotalTarget() - getTotalActivations());
@@ -72,8 +74,11 @@ function LandingPage({ onNavigate }: LandingPageProps) {
       });
   }, []);
 
+  const getTotal = (agent: any) => agent.silver + agent.gold + agent.platinum + agent.standard;
+
   return (
     <div className="max-w-6xl mx-auto space-y-12">
+      {/* Header Section */}
       <div className="text-center space-y-4 animate-fadeIn">
         <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-4">
           <Sparkles className="w-4 h-4 mr-2 text-amber-400" />
@@ -87,6 +92,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
         </p>
       </div>
 
+      {/* Tools Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {tools.map((tool) => {
           const Icon = tool.icon;
@@ -117,27 +123,24 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 <p className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
                   {tool.description}
                 </p>
-
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r opacity-0 group-hover:opacity-100 
-                               transition-opacity duration-500" style={{ backgroundImage: `linear-gradient(to right, 
-                               var(--tw-gradient-from), var(--tw-gradient-to))` }} />
               </div>
             </button>
           );
         })}
       </div>
 
+      {/* Activations Dashboard Section */}
       <div className="animate-fadeIn mt-12">
         <div className="max-w-7xl mx-auto px-6 py-8 glass-card rounded-2xl shadow-lg">
           <header className="mb-8">
             <h2 className="text-3xl font-bold text-indigo-600/70 gradient-text">Activations Dashboard</h2>
             <div className="flex items-center gap-4 mt-2">
               <div className="clock px-4 py-2 rounded-xl flex items-center gap-3">
-                <i data-lucide="clock" className="w-5 h-5 text-indigo-600"></i>
+                <Clock className="w-5 h-5 text-indigo-600" />
                 <span className="time-text font-semibold text-lg" id="current-time">00:00:00</span>
               </div>
               <div className="date-text flex items-center gap-3">
-                <i data-lucide="calendar" className="w-5 h-5 text-indigo-600"></i>
+                <Calendar className="w-5 h-5 text-indigo-600" />
                 <span className="font-medium text-indigo-600/70" id="current-date"></span>
               </div>
             </div>
@@ -147,11 +150,11 @@ function LandingPage({ onNavigate }: LandingPageProps) {
             <div className="stat-card rounded-2xl p-8">
               <div className="flex items-center">
                 <div className="gradient-bg p-4 rounded-xl shadow-lg">
-                  <i data-lucide="users" className="w-7 h-7 text-white"></i>
+                  <Users className="w-7 h-7 text-white" />
                 </div>
                 <div className="ml-6">
                   <p className="text-sm font-medium text-indigo-600/70">Total Agents</p>
-                  <p className="text-3xl font-bold text-gray-900" id="total-agents">14</p>
+                  <p className="text-3xl font-bold text-gray-900" id="total-agents">{agents.length}</p>
                 </div>
               </div>
             </div>
@@ -159,7 +162,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
             <div className="stat-card rounded-2xl p-8">
               <div className="flex items-center">
                 <div className="gradient-bg p-4 rounded-xl shadow-lg">
-                  <i data-lucide="award" className="w-7 h-7 text-white"></i>
+                  <Award className="w-7 h-7 text-white" />
                 </div>
                 <div className="ml-6">
                   <p className="text-sm font-medium text-indigo-600/70">Total Activations</p>
@@ -171,7 +174,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
             <div className="stat-card rounded-2xl p-8">
               <div className="flex items-center">
                 <div className="gradient-bg p-4 rounded-xl shadow-lg">
-                  <i data-lucide="target" className="w-7 h-7 text-white"></i>
+                  <Target className="w-7 h-7 text-white" />
                 </div>
                 <div className="ml-6">
                   <p className="text-sm font-medium text-indigo-600/70">Remaining Target</p>
@@ -193,20 +196,58 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                   <th className="text-left px-6 py-4 text-sm font-semibold text-indigo-600 uppercase tracking-wider">Progress</th>
                 </tr>
               </thead>
-              <tbody className="divide-y-8 divide-transparent" id="agents-body">
-                {/* Table rows will be populated by JavaScript */}
+              <tbody className="divide-y-8 divide-transparent">
+                {agents.map((agent, index) => (
+                  <tr key={index} className="shadow-sm table-hover-effect">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-indigo-500 flex items-center justify-center shadow-lg">
+                          <span className="text-lg font-bold text-white">
+                            {agent.name.charAt(0)}
+                          </span>
+                        </div>
+                        <span className="font-semibold text-gray-900">{agent.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-center text-emerald-600 font-semibold">{agent.silver}</td>
+                    <td className="px-6 py-4 text-center text-amber-600 font-semibold">{agent.gold}</td>
+                    <td className="px-6 py-4 text-center text-violet-600 font-semibold">{agent.platinum}</td>
+                    <td className="px-6 py-4 text-center text-blue-600 font-semibold">{agent.standard}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                          <div
+                            className="h-full bg-gradient-to-r from-indigo-500 to-blue-500"
+                            style={{ width: `${(getTotal(agent) / agent.target) * 100}%` }}
+                          ></div>
+                        </div>
+                        <span className="font-semibold text-gray-900">{getTotal(agent)}/{agent.target}</span>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
               <tfoot>
                 <tr>
                   <td className="px-6 py-4 font-semibold text-gray-900">Total</td>
-                  <td className="px-6 py-4 text-center font-bold text-emerald-600" id="total-silver">0</td>
-                  <td className="px-6 py-4 text-center font-bold text-amber-600" id="total-gold">0</td>
-                  <td className="px-6 py-4 text-center font-bold text-violet-600" id="total-platinum">0</td>
-                  <td className="px-6 py-4 text-center font-bold text-blue-600" id="total-standard">0</td>
+                  <td className="px-6 py-4 text-center font-bold text-emerald-600" id="total-silver">
+                    {agents.reduce((sum, agent) => sum + agent.silver, 0)}
+                  </td>
+                  <td className="px-6 py-4 text-center font-bold text-amber-600" id="total-gold">
+                    {agents.reduce((sum, agent) => sum + agent.gold, 0)}
+                  </td>
+                  <td className="px-6 py-4 text-center font-bold text-violet-600" id="total-platinum">
+                    {agents.reduce((sum, agent) => sum + agent.platinum, 0)}
+                  </td>
+                  <td className="px-6 py-4 text-center font-bold text-blue-600" id="total-standard">
+                    {agents.reduce((sum, agent) => sum + agent.standard, 0)}
+                  </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <i data-lucide="activity" className="w-5 h-5 text-indigo-500"></i>
-                      <span className="font-semibold text-gray-900" id="total-progress">0/0 Total Activations</span>
+                      <Activity className="w-5 h-5 text-indigo-500" />
+                      <span className="font-semibold text-gray-900" id="total-progress">
+                        {totalActivations}/{agents.reduce((sum, agent) => sum + agent.target, 0)} Total Activations
+                      </span>
                     </div>
                   </td>
                 </tr>
