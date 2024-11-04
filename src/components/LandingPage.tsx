@@ -44,6 +44,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
   const [agents, setAgents] = useState([]);
   const [totalActivations, setTotalActivations] = useState(0);
   const [remainingTarget, setRemainingTarget] = useState(0);
+  const [totalTarget, setTotalTarget] = useState(0);
   const [currentTime, setCurrentTime] = useState('');
   const [currentDate, setCurrentDate] = useState('');
 
@@ -93,6 +94,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
           mappedAgents.reduce((acc, agent) => acc + agent.target, 0);
 
         setTotalActivations(getTotalActivations());
+        setTotalTarget(getTotalTarget());
         setRemainingTarget(getTotalTarget() - getTotalActivations());
       })
       .catch(error => {
@@ -106,10 +108,10 @@ function LandingPage({ onNavigate }: LandingPageProps) {
     <div className="max-w-6xl mx-auto space-y-12">
       {/* Header Section with Modernized Clock and Calendar */}
       <div className="animate-fadeIn bg-white/5 backdrop-blur-lg rounded-xl p-6 mb-8 border border-white/10">
-        <h2 className="text-5xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4">
+        <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4">
           Albatross Communication Services
         </h2>
-        <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4">Activations Dashboard</h3>
+        <h3 className="text-2xl font-bold text-indigo-600/70 text-center mb-4">Activations Dashboard</h3>
         <div className="flex justify-center items-center space-x-6">
           <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg group-hover:scale-110 transition-transform duration-500">
             <Clock className="w-5 h-5 text-white" />
@@ -161,7 +163,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
 
       {/* Activations Dashboard Section */}
       <div className="animate-fadeIn mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Total Agents Card */}
+        {/* Total Target Card */}
         <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
           <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
             style={{ backgroundImage: 'linear-gradient(to right, from-indigo-500, to-purple-500)' }}></div>
@@ -169,11 +171,11 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                           transition-all duration-500 group-hover:border-white/20">
             <div className="flex items-center">
               <div className="p-4 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-                <Users className="w-7 h-7 text-white" />
+                <Target className="w-7 h-7 text-white" />
               </div>
               <div className="ml-6">
-                <p className="text-sm font-medium text-indigo-600/70">Total Agents</p>
-                <p className="text-3xl font-bold text-gray-900">{agents.length}</p>
+                <p className="text-sm font-medium text-indigo-600/70">Total Target</p>
+                <p className="text-3xl font-bold text-white">{totalTarget}</p>
               </div>
             </div>
           </div>
@@ -191,7 +193,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
               </div>
               <div className="ml-6">
                 <p className="text-sm font-medium text-indigo-600/70">Total Activations</p>
-                <p className="text-3xl font-bold text-gray-900">{totalActivations}</p>
+                <p className="text-3xl font-bold text-white">{totalActivations}</p>
               </div>
             </div>
           </div>
@@ -209,7 +211,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
               </div>
               <div className="ml-6">
                 <p className="text-sm font-medium text-indigo-600/70">Remaining Target</p>
-                <p className="text-3xl font-bold text-gray-900">{remainingTarget}</p>
+                <p className="text-3xl font-bold text-white">{remainingTarget}</p>
               </div>
             </div>
           </div>
