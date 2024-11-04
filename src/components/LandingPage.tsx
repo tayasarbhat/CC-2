@@ -104,33 +104,19 @@ function LandingPage({ onNavigate }: LandingPageProps) {
 
   return (
     <div className="max-w-6xl mx-auto space-y-12">
-      {/* Header Section */}
-      <div className="text-center space-y-4 animate-fadeIn">
-        <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 mb-4">
-          <Sparkles className="w-4 h-4 mr-2 text-amber-400" />
-          <span className="text-sm">Advanced Phone Number Tools</span>
-        </div>
-        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent">
-          Transform Your Numbers
-        </h1>
-        <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-          Powerful tools for managing, analyzing, and processing phone numbers with advanced features
-        </p>
-      </div>
-
-      {/* Company Header and Current Time/Date */}
-      <div className="bg-white/5 backdrop-blur-lg rounded-xl p-6 mb-8 border border-white/10">
+      {/* Header Section with Modernized Clock and Calendar */}
+      <div className="animate-fadeIn bg-white/5 backdrop-blur-lg rounded-xl p-6 mb-8 border border-white/10">
         <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4">
           Albatross Communication Services
         </h2>
         <h3 className="text-2xl font-bold text-indigo-600/70 text-center mb-4">Activations Dashboard</h3>
         <div className="flex justify-center items-center space-x-6">
-          <div className="flex items-center gap-2">
-            <Clock className="w-5 h-5 text-indigo-600" />
+          <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg group-hover:scale-110 transition-transform duration-500">
+            <Clock className="w-5 h-5 text-white" />
             <span className="text-lg font-semibold text-white">{currentTime}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-indigo-600" />
+          <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg group-hover:scale-110 transition-transform duration-500">
+            <Calendar className="w-5 h-5 text-white" />
             <span className="text-lg font-semibold text-white">{currentDate}</span>
           </div>
         </div>
