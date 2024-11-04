@@ -77,28 +77,40 @@ function LandingPage({ onNavigate }: LandingPageProps) {
   return (
     <div className="max-w-6xl mx-auto space-y-12">
       {/* Total Activations and Remaining Target containers */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 mb-8 md:mb-12">
-        <div className="p-4 md:p-8 bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 shadow-md">
-          <div className="flex items-center">
-            <div className="p-3 md:p-4 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg">
-              <Award className="w-5 md:w-7 h-5 md:h-7 text-white" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 animate-fadeIn">
+        <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
+          <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+            style={{ backgroundImage: `linear-gradient(to right, from-indigo-500, to-purple-500)` }} />
+          <div className="relative h-full bg-white/5 backdrop-blur-lg rounded-xl p-4 md:p-8 border border-white/10 shadow-md">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 md:p-4 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                <Award className="w-5 md:w-7 h-5 md:h-7 text-white" />
+              </div>
             </div>
-            <div className="ml-4 md:ml-6">
-              <p className="text-xs md:text-sm font-medium text-indigo-600/70">Total Activations</p>
-              <p className="text-2xl md:text-3xl font-bold text-gray-900">{totalActivations}</p>
-            </div>
+            <h2 className="text-2xl font-bold mb-2 group-hover:text-emerald-400 transition-colors duration-300">
+              Total Activations
+            </h2>
+            <p className="text-gray-400 text-lg group-hover:text-gray-300 transition-colors duration-300">
+              {totalActivations}
+            </p>
           </div>
         </div>
 
-        <div className="p-4 md:p-8 bg-white/5 backdrop-blur-lg rounded-xl border border-white/10 shadow-md">
-          <div className="flex items-center">
-            <div className="p-3 md:p-4 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 shadow-lg">
-              <Target className="w-5 md:w-7 h-5 md:h-7 text-white" />
+        <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
+          <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+            style={{ backgroundImage: `linear-gradient(to right, from-blue-500, to-teal-500)` }} />
+          <div className="relative h-full bg-white/5 backdrop-blur-lg rounded-xl p-4 md:p-8 border border-white/10 shadow-md">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 md:p-4 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                <Target className="w-5 md:w-7 h-5 md:h-7 text-white" />
+              </div>
             </div>
-            <div className="ml-4 md:ml-6">
-              <p className="text-xs md:text-sm font-medium text-indigo-600/70">Remaining Target</p>
-              <p className="text-2xl md:text-3xl font-bold text-gray-900">{remainingTarget}</p>
-            </div>
+            <h2 className="text-2xl font-bold mb-2 group-hover:text-emerald-400 transition-colors duration-300">
+              Remaining Target
+            </h2>
+            <p className="text-gray-400 text-lg group-hover:text-gray-300 transition-colors duration-300">
+              {remainingTarget}
+            </p>
           </div>
         </div>
       </div>
