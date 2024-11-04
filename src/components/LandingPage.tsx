@@ -156,130 +156,133 @@ function LandingPage({ onNavigate }: LandingPageProps) {
       </div>
 
       {/* Activations Dashboard Section */}
-      <div className="animate-fadeIn mt-12">
-        <div className="max-w-7xl mx-auto px-6 py-8 glass-card rounded-2xl shadow-lg">
-          <header className="mb-8">
-            <h2 className="text-3xl font-bold text-indigo-600/70 gradient-text">Activations Dashboard</h2>
-            <div className="flex items-center gap-4 mt-2">
-              <div className="clock px-4 py-2 rounded-xl flex items-center gap-3">
-                <Clock className="w-5 h-5 text-indigo-600" />
-                <span className="time-text font-semibold text-lg">{currentTime}</span>
+      <div className="animate-fadeIn mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Total Agents Card */}
+        <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
+          <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+            style={{ backgroundImage: 'linear-gradient(to right, from-indigo-500, to-purple-500)' }}></div>
+          <div className="relative bg-white/5 backdrop-blur-lg rounded-xl p-8 border border-white/10 
+                          transition-all duration-500 group-hover:border-white/20">
+            <div className="flex items-center">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                <Users className="w-7 h-7 text-white" />
               </div>
-              <div className="date-text flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-indigo-600" />
-                <span className="font-medium text-indigo-600/70">{currentDate}</span>
-              </div>
-            </div>
-          </header>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <div className="stat-card rounded-2xl p-8">
-              <div className="flex items-center">
-                <div className="gradient-bg p-4 rounded-xl shadow-lg">
-                  <Users className="w-7 h-7 text-white" />
-                </div>
-                <div className="ml-6">
-                  <p className="text-sm font-medium text-indigo-600/70">Total Agents</p>
-                  <p className="text-3xl font-bold text-gray-900">{agents.length}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="stat-card rounded-2xl p-8">
-              <div className="flex items-center">
-                <div className="gradient-bg p-4 rounded-xl shadow-lg">
-                  <Award className="w-7 h-7 text-white" />
-                </div>
-                <div className="ml-6">
-                  <p className="text-sm font-medium text-indigo-600/70">Total Activations</p>
-                  <p className="text-3xl font-bold text-gray-900">{totalActivations}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="stat-card rounded-2xl p-8">
-              <div className="flex items-center">
-                <div className="gradient-bg p-4 rounded-xl shadow-lg">
-                  <Target className="w-7 h-7 text-white" />
-                </div>
-                <div className="ml-6">
-                  <p className="text-sm font-medium text-indigo-600/70">Remaining Target</p>
-                  <p className="text-3xl font-bold text-gray-900">{remainingTarget}</p>
-                </div>
+              <div className="ml-6">
+                <p className="text-sm font-medium text-indigo-600/70">Total Agents</p>
+                <p className="text-3xl font-bold text-gray-900">{agents.length}</p>
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="overflow-x-auto">
-            <table className="modern-table w-full" id="agents-table">
-              <thead>
-                <tr>
-                  <th className="text-left px-6 py-4 text-sm font-semibold text-indigo-600 uppercase tracking-wider">Agent Name</th>
-                  <th className="text-center px-6 py-4 text-sm font-semibold text-emerald-600 uppercase tracking-wider">Silver</th>
-                  <th className="text-center px-6 py-4 text-sm font-semibold text-amber-600 uppercase tracking-wider">Gold</th>
-                  <th className="text-center px-6 py-4 text-sm font-semibold text-violet-600 uppercase tracking-wider">Platinum</th>
-                  <th className="text-center px-6 py-4 text-sm font-semibold text-blue-600 uppercase tracking-wider">Standard</th>
-                  <th className="text-left px-6 py-4 text-sm font-semibold text-indigo-600 uppercase tracking-wider">Progress</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y-8 divide-transparent">
-                {agents.map((agent, index) => (
-                  <tr key={index} className="shadow-sm table-hover-effect">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-indigo-500 flex items-center justify-center shadow-lg">
-                          <span className="text-lg font-bold text-white">
-                            {agent.name.charAt(0)}
-                          </span>
-                        </div>
-                        <span className="font-semibold text-white">{agent.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-center text-emerald-600 font-semibold">{agent.silver}</td>
-                    <td className="px-6 py-4 text-center text-amber-600 font-semibold">{agent.gold}</td>
-                    <td className="px-6 py-4 text-center text-violet-600 font-semibold">{agent.platinum}</td>
-                    <td className="px-6 py-4 text-center text-blue-600 font-semibold">{agent.standard}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-4">
-                        <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden shadow-inner">
-                          <div
-                            className="h-full bg-gradient-to-r from-indigo-500 to-blue-500"
-                            style={{ width: `${(getTotal(agent) / agent.target) * 100}%` }}
-                          ></div>
-                        </div>
-                        <span className="font-semibold text-gray-900">{getTotal(agent)}/{agent.target}</span>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td className="px-6 py-4 font-semibold text-gray-900">Total</td>
-                  <td className="px-6 py-4 text-center font-bold text-emerald-600">
-                    {agents.reduce((sum, agent) => sum + agent.silver, 0)}
-                  </td>
-                  <td className="px-6 py-4 text-center font-bold text-amber-600">
-                    {agents.reduce((sum, agent) => sum + agent.gold, 0)}
-                  </td>
-                  <td className="px-6 py-4 text-center font-bold text-violet-600">
-                    {agents.reduce((sum, agent) => sum + agent.platinum, 0)}
-                  </td>
-                  <td className="px-6 py-4 text-center font-bold text-blue-600">
-                    {agents.reduce((sum, agent) => sum + agent.standard, 0)}
-                  </td>
+        {/* Total Activations Card */}
+        <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
+          <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+            style={{ backgroundImage: 'linear-gradient(to right, from-blue-500, to-teal-500)' }}></div>
+          <div className="relative bg-white/5 backdrop-blur-lg rounded-xl p-8 border border-white/10 
+                          transition-all duration-500 group-hover:border-white/20">
+            <div className="flex items-center">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                <Award className="w-7 h-7 text-white" />
+              </div>
+              <div className="ml-6">
+                <p className="text-sm font-medium text-indigo-600/70">Total Activations</p>
+                <p className="text-3xl font-bold text-gray-900">{totalActivations}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Remaining Target Card */}
+        <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
+          <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+            style={{ backgroundImage: 'linear-gradient(to right, from-emerald-500, to-cyan-500)' }}></div>
+          <div className="relative bg-white/5 backdrop-blur-lg rounded-xl p-8 border border-white/10 
+                          transition-all duration-500 group-hover:border-white/20">
+            <div className="flex items-center">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                <Target className="w-7 h-7 text-white" />
+              </div>
+              <div className="ml-6">
+                <p className="text-sm font-medium text-indigo-600/70">Remaining Target</p>
+                <p className="text-3xl font-bold text-gray-900">{remainingTarget}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Table Section */}
+      <div className="animate-fadeIn mt-8 glass-card rounded-2xl shadow-lg overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="modern-table w-full">
+            <thead>
+              <tr>
+                <th className="text-left px-6 py-4 text-sm font-semibold text-indigo-600 uppercase tracking-wider">Agent Name</th>
+                <th className="text-center px-6 py-4 text-sm font-semibold text-emerald-600 uppercase tracking-wider">Silver</th>
+                <th className="text-center px-6 py-4 text-sm font-semibold text-amber-600 uppercase tracking-wider">Gold</th>
+                <th className="text-center px-6 py-4 text-sm font-semibold text-violet-600 uppercase tracking-wider">Platinum</th>
+                <th className="text-center px-6 py-4 text-sm font-semibold text-blue-600 uppercase tracking-wider">Standard</th>
+                <th className="text-left px-6 py-4 text-sm font-semibold text-indigo-600 uppercase tracking-wider">Progress</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y-8 divide-transparent">
+              {agents.map((agent, index) => (
+                <tr key={index} className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn hover:bg-white/10 transition-all duration-500">
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <Activity className="w-5 h-5 text-indigo-500" />
-                      <span className="font-semibold text-gray-900">
-                        {totalActivations}/{agents.reduce((sum, agent) => sum + agent.target, 0)} Total Activations
-                      </span>
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-indigo-500 flex items-center justify-center shadow-lg">
+                        <span className="text-lg font-bold text-white">
+                          {agent.name.charAt(0)}
+                        </span>
+                      </div>
+                      <span className="font-semibold text-white">{agent.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-center text-emerald-600 font-semibold">{agent.silver}</td>
+                  <td className="px-6 py-4 text-center text-amber-600 font-semibold">{agent.gold}</td>
+                  <td className="px-6 py-4 text-center text-violet-600 font-semibold">{agent.platinum}</td>
+                  <td className="px-6 py-4 text-center text-blue-600 font-semibold">{agent.standard}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-4">
+                      <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                        <div
+                          className="h-full bg-gradient-to-r from-indigo-500 to-blue-500"
+                          style={{ width: `${(getTotal(agent) / agent.target) * 100}%` }}
+                        ></div>
+                      </div>
+                      <span className="font-semibold text-gray-900">{getTotal(agent)}/{agent.target}</span>
                     </div>
                   </td>
                 </tr>
-              </tfoot>
-            </table>
-          </div>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td className="px-6 py-4 font-semibold text-gray-900">Total</td>
+                <td className="px-6 py-4 text-center font-bold text-emerald-600">
+                  {agents.reduce((sum, agent) => sum + agent.silver, 0)}
+                </td>
+                <td className="px-6 py-4 text-center font-bold text-amber-600">
+                  {agents.reduce((sum, agent) => sum + agent.gold, 0)}
+                </td>
+                <td className="px-6 py-4 text-center font-bold text-violet-600">
+                  {agents.reduce((sum, agent) => sum + agent.platinum, 0)}
+                </td>
+                <td className="px-6 py-4 text-center font-bold text-blue-600">
+                  {agents.reduce((sum, agent) => sum + agent.standard, 0)}
+                </td>
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <Activity className="w-5 h-5 text-indigo-500" />
+                    <span className="font-semibold text-gray-900">
+                      {totalActivations}/{agents.reduce((sum, agent) => sum + agent.target, 0)} Total Activations
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
         </div>
       </div>
     </div>
