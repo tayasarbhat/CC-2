@@ -134,7 +134,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
           <h2 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4 animate-fadeIn">
             Albatross Communication Services
           </h2>
-          <h3 className="text-2xl font-bold text-indigo-600/70 text-center mb-4 animate-fadeIn">
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4 animate-fadeIn">
             Activations Dashboard
           </h3>
           <div className="flex justify-center items-center space-x-6 animate-fadeIn">
@@ -200,7 +200,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 <Target className="w-7 h-7 text-white" />
               </div>
               <div className="ml-6">
-                <p className="text-sm font-medium text-indigo-600/70">Total Target</p>
+                <p className="text-1xl font-bold text-indigo-600/70">Total Target</p>
                 <p className="text-3xl font-bold text-white">{totalTarget}</p>
               </div>
             </div>
@@ -218,7 +218,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 <Award className="w-7 h-7 text-white" />
               </div>
               <div className="ml-6">
-                <p className="text-sm font-medium text-indigo-600/70">Total Activations</p>
+                <p className="text-1xl font-bold text-indigo-600/70">Total Activations</p>
                 <p className="text-3xl font-bold text-white">{totalActivations}</p>
               </div>
             </div>
@@ -236,7 +236,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 <Target className="w-7 h-7 text-white" />
               </div>
               <div className="ml-6">
-                <p className="text-sm font-medium text-indigo-600/70">Remaining Target</p>
+                <p className="text-1xl font-bold text-indigo-600/70">Remaining Target</p>
                 <p className="text-3xl font-bold text-white">{remainingTarget}</p>
               </div>
             </div>
