@@ -44,6 +44,32 @@ function LandingPage({ onNavigate }: LandingPageProps) {
   const [agents, setAgents] = useState([]);
   const [totalActivations, setTotalActivations] = useState(0);
   const [remainingTarget, setRemainingTarget] = useState(0);
+  const [currentTime, setCurrentTime] = useState('');
+  const [currentDate, setCurrentDate] = useState('');
+
+  useEffect(() => {
+    // Update clock and date every second
+    const updateClock = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      }));
+      setCurrentDate(now.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }));
+    };
+
+    updateClock();
+    const timer = setInterval(updateClock, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     fetch('https://script.google.com/macros/s/AKfycbx96S87lnh7haL6v5eajGkeRi_3-wTmXIvf21zQuV7jFUejC21ysKBi00orzM8Hm8pQnA/exec')
@@ -137,11 +163,11 @@ function LandingPage({ onNavigate }: LandingPageProps) {
             <div className="flex items-center gap-4 mt-2">
               <div className="clock px-4 py-2 rounded-xl flex items-center gap-3">
                 <Clock className="w-5 h-5 text-indigo-600" />
-                <span className="time-text font-semibold text-lg" id="current-time">00:00:00</span>
+                <span className="time-text font-semibold text-lg">{currentTime}</span>
               </div>
               <div className="date-text flex items-center gap-3">
                 <Calendar className="w-5 h-5 text-indigo-600" />
-                <span className="font-medium text-indigo-600/70" id="current-date"></span>
+                <span className="font-medium text-indigo-600/70">{currentDate}</span>
               </div>
             </div>
           </header>
@@ -154,7 +180,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 </div>
                 <div className="ml-6">
                   <p className="text-sm font-medium text-indigo-600/70">Total Agents</p>
-                  <p className="text-3xl font-bold text-gray-900" id="total-agents">{agents.length}</p>
+                  <p className="text-3xl font-bold text-gray-900">{agents.length}</p>
                 </div>
               </div>
             </div>
@@ -166,7 +192,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 </div>
                 <div className="ml-6">
                   <p className="text-sm font-medium text-indigo-600/70">Total Activations</p>
-                  <p className="text-3xl font-bold text-gray-900" id="total-activations">{totalActivations}</p>
+                  <p className="text-3xl font-bold text-gray-900">{totalActivations}</p>
                 </div>
               </div>
             </div>
@@ -178,7 +204,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 </div>
                 <div className="ml-6">
                   <p className="text-sm font-medium text-indigo-600/70">Remaining Target</p>
-                  <p className="text-3xl font-bold text-gray-900" id="remaining-target">{remainingTarget}</p>
+                  <p className="text-3xl font-bold text-gray-900">{remainingTarget}</p>
                 </div>
               </div>
             </div>
@@ -206,7 +232,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                             {agent.name.charAt(0)}
                           </span>
                         </div>
-                        <span className="font-semibold text-gray-900">{agent.name}</span>
+                        <span className="font-semibold text-white">{agent.name}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-center text-emerald-600 font-semibold">{agent.silver}</td>
@@ -230,22 +256,22 @@ function LandingPage({ onNavigate }: LandingPageProps) {
               <tfoot>
                 <tr>
                   <td className="px-6 py-4 font-semibold text-gray-900">Total</td>
-                  <td className="px-6 py-4 text-center font-bold text-emerald-600" id="total-silver">
+                  <td className="px-6 py-4 text-center font-bold text-emerald-600">
                     {agents.reduce((sum, agent) => sum + agent.silver, 0)}
                   </td>
-                  <td className="px-6 py-4 text-center font-bold text-amber-600" id="total-gold">
+                  <td className="px-6 py-4 text-center font-bold text-amber-600">
                     {agents.reduce((sum, agent) => sum + agent.gold, 0)}
                   </td>
-                  <td className="px-6 py-4 text-center font-bold text-violet-600" id="total-platinum">
+                  <td className="px-6 py-4 text-center font-bold text-violet-600">
                     {agents.reduce((sum, agent) => sum + agent.platinum, 0)}
                   </td>
-                  <td className="px-6 py-4 text-center font-bold text-blue-600" id="total-standard">
+                  <td className="px-6 py-4 text-center font-bold text-blue-600">
                     {agents.reduce((sum, agent) => sum + agent.standard, 0)}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <Activity className="w-5 h-5 text-indigo-500" />
-                      <span className="font-semibold text-gray-900" id="total-progress">
+                      <span className="font-semibold text-gray-900">
                         {totalActivations}/{agents.reduce((sum, agent) => sum + agent.target, 0)} Total Activations
                       </span>
                     </div>
