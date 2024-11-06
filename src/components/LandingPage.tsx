@@ -113,7 +113,66 @@ function LandingPage({ onNavigate }: LandingPageProps) {
 
   return (
     <div className="max-w-6xl mx-auto space-y-12">
-      {/* Existing Activations Section */}
+      {/* Existing Clock and Tools sections */}
+      
+      {/* Activations Dashboard Section */}
+      <div className="animate-fadeIn mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Total Target Card */}
+        <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
+          <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+            style={{ backgroundImage: 'linear-gradient(to right, from-indigo-500, to-purple-500)' }}></div>
+          <div className="relative bg-white/5 backdrop-blur-lg rounded-xl p-8 border border-white/10 
+                          transition-all duration-500 group-hover:border-white/20">
+            <div className="flex items-center">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                <Target className="w-7 h-7 text-white" />
+              </div>
+              <div className="ml-6">
+                <p className="text-1xl font-bold text-indigo-600/70">Total Target</p>
+                <p className="text-3xl font-bold text-white">{totalTarget}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Total Activations Card */}
+        <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
+          <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+            style={{ backgroundImage: 'linear-gradient(to right, from-blue-500, to-teal-500)' }}></div>
+          <div className="relative bg-white/5 backdrop-blur-lg rounded-xl p-8 border border-white/10 
+                          transition-all duration-500 group-hover:border-white/20">
+            <div className="flex items-center">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-blue-500 to-teal-500 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                <Award className="w-7 h-7 text-white" />
+              </div>
+              <div className="ml-6">
+                <p className="text-1xl font-bold text-indigo-600/70">Total Activations</p>
+                <p className="text-3xl font-bold text-white">{totalActivations}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Remaining Target Card */}
+        <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
+          <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+            style={{ backgroundImage: 'linear-gradient(to right, from-emerald-500, to-cyan-500)' }}></div>
+          <div className="relative bg-white/5 backdrop-blur-lg rounded-xl p-8 border border-white/10 
+                          transition-all duration-500 group-hover:border-white/20">
+            <div className="flex items-center">
+              <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                <Target className="w-7 h-7 text-white" />
+              </div>
+              <div className="ml-6">
+                <p className="text-1xl font-bold text-indigo-600/70">Remaining Target</p>
+                <p className="text-3xl font-bold text-white">{remainingTarget}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Attendance Dashboard Section */}
       <div className="animate-fadeIn mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Total Attendance Card */}
         <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
