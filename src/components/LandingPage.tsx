@@ -231,7 +231,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
         </div>
       </div>
 
-      {/* Activations Table */}
+      {/* Table Section */}
       <div className="animate-fadeIn mt-8 glass-card rounded-2xl shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="modern-table w-full">
@@ -251,9 +251,14 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-xl bg-indigo-500 flex items-center justify-center shadow-lg">
-                        <span className="text-lg font-bold text-white">{agent.name.charAt(0)}</span>
+                        <span className="text-lg font-bold text-white">
+                          {agent.name.charAt(0)}
+                        </span>
                       </div>
-                      <span className="font-semibold text-white">{agent.name}</span>
+                      <span className="font-semibold text-white">
+                        {agent.name}
+                        {renderMedalIcon(index)}
+                      </span>
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center text-emerald-600 font-semibold">{agent.silver}</td>
@@ -274,9 +279,36 @@ function LandingPage({ onNavigate }: LandingPageProps) {
                 </tr>
               ))}
             </tbody>
+            <tfoot>
+              <tr>
+                <td className="px-6 py-4 font-semibold text-gray-900">Total</td>
+                <td className="px-6 py-4 text-center font-bold text-emerald-600">
+                  {agents.reduce((sum, agent) => sum + agent.silver, 0)}
+                </td>
+                <td className="px-6 py-4 text-center font-bold text-amber-600">
+                  {agents.reduce((sum, agent) => sum + agent.gold, 0)}
+                </td>
+                <td className="px-6 py-4 text-center font-bold text-violet-600">
+                  {agents.reduce((sum, agent) => sum + agent.platinum, 0)}
+                </td>
+                <td className="px-6 py-4 text-center font-bold text-blue-600">
+                  {agents.reduce((sum, agent) => sum + agent.standard, 0)}
+                </td>
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <Activity className="w-5 h-5 text-indigo-500" />
+                    <span className="font-semibold text-gray-900">
+                      {totalActivations}/{agents.reduce((sum, agent) => sum + agent.target, 0)} Total Activations
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </div>
+    </div>
+  
 
       {/* Attendance Dashboard Section */}
       <div className="animate-fadeIn mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
