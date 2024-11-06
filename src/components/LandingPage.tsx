@@ -227,7 +227,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
           </div>
         </div>
       </div>
-    
+
       {/* Attendance Dashboard Section */}
       <div className="animate-fadeIn mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Total Attendance Card */}
