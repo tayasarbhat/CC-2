@@ -109,11 +109,13 @@ function LandingPage({ onNavigate }: LandingPageProps) {
       .catch(error => console.error('Error fetching attendance:', error));
   }, []);
 
+  const getTotal = (agent: any) => agent.silver + agent.gold + agent.platinum + agent.standard;
+
   return (
     <div className="max-w-6xl mx-auto space-y-12">
       {/* Header Section */}
       <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
-               <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+        <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
           style={{ backgroundImage: 'linear-gradient(to right, from-indigo-400, to-pink-400)' }}></div>
         <div className="relative bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 transition-all duration-500 group-hover:border-white/20">
           <h2 className="text-6xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4 animate-fadeIn">
@@ -229,6 +231,53 @@ function LandingPage({ onNavigate }: LandingPageProps) {
         </div>
       </div>
 
+      {/* Activations Table */}
+      <div className="animate-fadeIn mt-8 glass-card rounded-2xl shadow-lg overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="modern-table w-full">
+            <thead>
+              <tr>
+                <th className="text-left px-6 py-4 text-sm font-semibold text-indigo-600 uppercase tracking-wider">Agent Name</th>
+                <th className="text-center px-6 py-4 text-sm font-semibold text-emerald-600 uppercase tracking-wider">Silver</th>
+                <th className="text-center px-6 py-4 text-sm font-semibold text-amber-600 uppercase tracking-wider">Gold</th>
+                <th className="text-center px-6 py-4 text-sm font-semibold text-violet-600 uppercase tracking-wider">Platinum</th>
+                <th className="text-center px-6 py-4 text-sm font-semibold text-blue-600 uppercase tracking-wider">Standard</th>
+                <th className="text-left px-6 py-4 text-sm font-semibold text-indigo-600 uppercase tracking-wider">Progress</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y-8 divide-transparent">
+              {agents.map((agent, index) => (
+                <tr key={index} className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn hover:bg-white/10 transition-all duration-500">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-indigo-500 flex items-center justify-center shadow-lg">
+                        <span className="text-lg font-bold text-white">{agent.name.charAt(0)}</span>
+                      </div>
+                      <span className="font-semibold text-white">{agent.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-center text-emerald-600 font-semibold">{agent.silver}</td>
+                  <td className="px-6 py-4 text-center text-amber-600 font-semibold">{agent.gold}</td>
+                  <td className="px-6 py-4 text-center text-violet-600 font-semibold">{agent.platinum}</td>
+                  <td className="px-6 py-4 text-center text-blue-600 font-semibold">{agent.standard}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-4">
+                      <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                        <div
+                          className="h-full bg-gradient-to-r from-indigo-500 to-blue-500"
+                          style={{ width: `${(getTotal(agent) / agent.target) * 100}%` }}
+                        ></div>
+                      </div>
+                      <span className="font-semibold text-gray-900">{getTotal(agent)}/{agent.target}</span>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       {/* Attendance Dashboard Section */}
       <div className="animate-fadeIn mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Total Attendance Card */}
@@ -321,4 +370,3 @@ function LandingPage({ onNavigate }: LandingPageProps) {
 }
 
 export default LandingPage;
-
