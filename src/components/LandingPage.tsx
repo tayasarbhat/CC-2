@@ -53,7 +53,6 @@ function LandingPage({ onNavigate }: LandingPageProps) {
   const [currentDate, setCurrentDate] = useState('');
 
   useEffect(() => {
-    // Clock and Date updater
     const updateClock = () => {
       const now = new Date();
       setCurrentTime(now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }));
@@ -65,7 +64,6 @@ function LandingPage({ onNavigate }: LandingPageProps) {
   }, []);
 
   useEffect(() => {
-    // Activation data fetch
     fetch('https://script.google.com/macros/s/AKfycbx96S87lnh7haL6v5eajGkeRi_3-wTmXIvf21zQuV7jFUejC21ysKBi00orzM8Hm8pQnA/exec')
       .then(response => response.json())
       .then(data => {
@@ -91,7 +89,6 @@ function LandingPage({ onNavigate }: LandingPageProps) {
       })
       .catch(error => console.error('Error fetching data:', error));
     
-    // Attendance data fetch
     fetch('https://attendance-data-source-url.com')
       .then(response => response.json())
       .then(data => {
@@ -230,86 +227,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
           </div>
         </div>
       </div>
-
-      {/* Table Section */}
-      <div className="animate-fadeIn mt-8 glass-card rounded-2xl shadow-lg overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="modern-table w-full">
-            <thead>
-              <tr>
-                <th className="text-left px-6 py-4 text-sm font-semibold text-indigo-600 uppercase tracking-wider">Agent Name</th>
-                <th className="text-center px-6 py-4 text-sm font-semibold text-emerald-600 uppercase tracking-wider">Silver</th>
-                <th className="text-center px-6 py-4 text-sm font-semibold text-amber-600 uppercase tracking-wider">Gold</th>
-                <th className="text-center px-6 py-4 text-sm font-semibold text-violet-600 uppercase tracking-wider">Platinum</th>
-                <th className="text-center px-6 py-4 text-sm font-semibold text-blue-600 uppercase tracking-wider">Standard</th>
-                <th className="text-left px-6 py-4 text-sm font-semibold text-indigo-600 uppercase tracking-wider">Progress</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y-8 divide-transparent">
-              {agents.map((agent, index) => (
-                <tr key={index} className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn hover:bg-white/10 transition-all duration-500">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-indigo-500 flex items-center justify-center shadow-lg">
-                        <span className="text-lg font-bold text-white">
-                          {agent.name.charAt(0)}
-                        </span>
-                      </div>
-                      <span className="font-semibold text-white">
-                        {agent.name}
-                        {renderMedalIcon(index)}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-center text-emerald-600 font-semibold">{agent.silver}</td>
-                  <td className="px-6 py-4 text-center text-amber-600 font-semibold">{agent.gold}</td>
-                  <td className="px-6 py-4 text-center text-violet-600 font-semibold">{agent.platinum}</td>
-                  <td className="px-6 py-4 text-center text-blue-600 font-semibold">{agent.standard}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-4">
-                      <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden shadow-inner">
-                        <div
-                          className="h-full bg-gradient-to-r from-indigo-500 to-blue-500"
-                          style={{ width: `${(getTotal(agent) / agent.target) * 100}%` }}
-                        ></div>
-                      </div>
-                      <span className="font-semibold text-gray-900">{getTotal(agent)}/{agent.target}</span>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td className="px-6 py-4 font-semibold text-gray-900">Total</td>
-                <td className="px-6 py-4 text-center font-bold text-emerald-600">
-                  {agents.reduce((sum, agent) => sum + agent.silver, 0)}
-                </td>
-                <td className="px-6 py-4 text-center font-bold text-amber-600">
-                  {agents.reduce((sum, agent) => sum + agent.gold, 0)}
-                </td>
-                <td className="px-6 py-4 text-center font-bold text-violet-600">
-                  {agents.reduce((sum, agent) => sum + agent.platinum, 0)}
-                </td>
-                <td className="px-6 py-4 text-center font-bold text-blue-600">
-                  {agents.reduce((sum, agent) => sum + agent.standard, 0)}
-                </td>
-                <td className="px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <Activity className="w-5 h-5 text-indigo-500" />
-                    <span className="font-semibold text-gray-900">
-                      {totalActivations}/{agents.reduce((sum, agent) => sum + agent.target, 0)} Total Activations
-                    </span>
-                  </div>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
-    </div>
-  
-
+    
       {/* Attendance Dashboard Section */}
       <div className="animate-fadeIn mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Total Attendance Card */}
