@@ -1,4 +1,4 @@
-name: TAB
+name:  Deploy Vite Project to GitHub Pages
 
 on:
   push:
