@@ -73,7 +73,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
   }, []);
 
   useEffect(() => {
-    fetch('https://script.google.com/macros/s/AKfycbx96S87lnh7haL6v5eajGkeRi_3-wTmXIvf21zQuV7jFUejC21ysKBi00orzM8Hm8pQnA/exec')
+    fetch('https://script.google.com/macros/s/AKfycbwH6Z1WTQW5QRcMZQsvXcpeX22SY6qnunv_5TRN58DuEVzyQtA99bCMP2PoW6ABL0SK/exec')
       .then(response => response.json())
       .then(data => {
         const mappedAgents = data.map((row: any) => ({
