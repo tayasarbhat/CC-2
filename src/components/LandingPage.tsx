@@ -194,9 +194,7 @@ function LandingPage({ onNavigate }: LandingPageProps) {
           style={{ backgroundImage: 'linear-gradient(to right, from-indigo-400, to-pink-400)' }}></div>
         <div className="relative bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 transition-all duration-500 group-hover:border-white/20">
          
-          <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4 animate-fadeIn">
-            Activations Dashboard
-          </h3>
+          
 
           </div>
         </div>
