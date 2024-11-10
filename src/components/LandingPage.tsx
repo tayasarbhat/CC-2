@@ -135,7 +135,8 @@ function LandingPage({ onNavigate }: LandingPageProps) {
             Albatross Communication Services
           </h1>
            <h2 className="text-6xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4 animate-fadeIn">
-            
+
+             
           </h2>
           
           <div className="flex justify-between items-center animate-fadeIn">
