@@ -134,6 +134,9 @@ function LandingPage({ onNavigate }: LandingPageProps) {
           <h1 className="text-6xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4 animate-fadeIn">
             Albatross Communication Services
           </h1>
+           <h2 className="text-6xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4 animate-fadeIn">
+            
+          </h2>
           
           <div className="flex justify-between items-center animate-fadeIn">
         <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg group-hover:scale-110 transition-transform duration-500">
