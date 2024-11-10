@@ -125,28 +125,32 @@ function LandingPage({ onNavigate }: LandingPageProps) {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-12">
-      {/* Header Section with Modernized Clock and Calendar */}
-      <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
-        <div className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
-          style={{ backgroundImage: 'linear-gradient(to right, from-indigo-400, to-pink-400)' }}></div>
-        <div className="relative bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 transition-all duration-500 group-hover:border-white/20">
-          <h2 className="text-6xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4 animate-fadeIn">
-            Albatross Communication Services
-          </h2>
-          
-          <div className="flex justify-center items-center space-x-6 animate-fadeIn">
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg group-hover:scale-110 transition-transform duration-500">
-              <Clock className="w-5 h-5 text-white" />
-              <span className="text-lg font-semibold text-white">{currentTime}</span>
-            </div>
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg group-hover:scale-110 transition-transform duration-500">
-              <Calendar className="w-5 h-5 text-white" />
-              <span className="text-lg font-semibold text-white">{currentDate}</span>
-            </div>
-          </div>
+   <div className="max-w-6xl mx-auto space-y-12">
+  {/* Header Section with Modernized Clock and Calendar */}
+  <div className="group relative overflow-hidden rounded-2xl p-1 animate-scaleIn">
+    <div
+      className="absolute inset-0 bg-gradient-to-r opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+      style={{ backgroundImage: 'linear-gradient(to right, from-indigo-400, to-pink-400)' }}
+    ></div>
+    <div className="relative bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10 transition-all duration-500 group-hover:border-white/20">
+      <h2 className="text-6xl font-bold bg-gradient-to-r from-indigo-400 to-pink-400 bg-clip-text text-transparent text-center mb-4 animate-fadeIn">
+        Albatross Communication Services
+      </h2>
+
+      <div className="flex justify-between items-center animate-fadeIn">
+        <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 shadow-lg group-hover:scale-110 transition-transform duration-500">
+          <Clock className="w-5 h-5 text-white" />
+          <span className="text-lg font-semibold text-white">{currentTime}</span>
+        </div>
+        <div className="flex items-center gap-2 p-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg group-hover:scale-110 transition-transform duration-500">
+          <Calendar className="w-5 h-5 text-white" />
+          <span className="text-lg font-semibold text-white">{currentDate}</span>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
 
       {/* Tools Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
